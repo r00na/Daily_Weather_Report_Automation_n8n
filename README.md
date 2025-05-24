@@ -1,6 +1,6 @@
 # 🌤️📧 Daily Weather Report Automation with n8n
 
-This project is a fully automated weather report system using [n8n](https://n8n.io), the **OpenWeatherMap API**, and **SMTP**. It sends beautifully styled **Arabic HTML emails** for **Amman, Jordan** twice daily at **9:00 AM and 4:00 PM**.
+This project is a fully automated weather report system using [n8n](https://n8n.io), the **OpenWeatherMap API**, and **SMTP**. It sends beautifully styled **Arabic HTML emails** for **Amman, Jordan** twice daily at **9:00 AM and 6:00 PM**.
 
 ## ⚙️ Detailed Workflow Breakdown
 
@@ -9,8 +9,7 @@ The n8n workflow is composed of the following nodes:
 ### 🕘 1. Schedule Trigger
 - **Automatically triggers the workflow twice daily** at:
   -  9:00 AM 
-  -  4:00 PM
-- Node: Schedule (9am & 4pm)
+  -  6:00 PM
 
 ### 🌍 2. Get Weather (OpenWeatherMap)
 - Fetches **real-time weather data** for a city (**Amman**).
@@ -44,7 +43,7 @@ The n8n workflow is composed of the following nodes:
 
 ## 📸 Real Daily Result for Amman
 
-This is the actual result email automatically sent every day at **9 AM** and **4 PM** for **Amman**:
+This is the actual result email automatically sent every day at **9 AM** and **6 PM** for **Amman**:
 
 ![Real Result - Amman](images/amman.png)
 
