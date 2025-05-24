@@ -1,0 +1,428 @@
+{
+  "name": "Email_Weather_ccrsmt",
+  "nodes": [
+    {
+      "parameters": {
+        "cityName": "Amman"
+      },
+      "id": "03edf436-39c5-4dd1-ada3-aba44a1991ab",
+      "name": "Get Weather Amman1",
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        -1060,
+        1460
+      ],
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "DBclhSvhObG5Sicd",
+          "name": "OpenWeatherMap account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json.weather[0].main}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "Clear"
+            },
+            {
+              "value2": "Clouds",
+              "output": 1
+            },
+            {
+              "value2": "Rain",
+              "output": 2
+            },
+            {
+              "value2": "Drizzle",
+              "output": 2
+            },
+            {
+              "value2": "Thunderstorm",
+              "output": 2
+            },
+            {
+              "value2": "Snow",
+              "output": 3
+            },
+            {
+              "value2": "Mist",
+              "output": 3
+            },
+            {
+              "value2": "Fog",
+              "output": 3
+            },
+            {
+              "output": 3
+            },
+            {
+              "value2": "Haze",
+              "output": 3
+            },
+            {
+              "value2": "Smoke",
+              "output": 3
+            },
+            {
+              "value2": "Dust",
+              "output": 3
+            },
+            {
+              "value2": "Tornado",
+              "output": 3
+            },
+            {
+              "value2": "Sand\t",
+              "output": 3
+            },
+            {
+              "value2": "Squall",
+              "output": 3
+            }
+          ]
+        }
+      },
+      "id": "0d7c05fc-7a01-4ab6-9a10-a42c3dc40c7d",
+      "name": "Switch Weather Condition",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        1440
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-clear-html",
+              "name": "=emailHtml",
+              "type": "string",
+              "value": "=<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"ar\">\n<head>\n<meta charset=\"UTF-8\">\n<style>\n  @import url(\"https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap\");\n  body {\n    margin: 0;\n    padding: 0;\n    font-family: 'Tajawal', sans-serif;\n    direction: rtl;\n    text-align: right;\n    background-color: #E1F5FE; /* Light Cyan background */\n    color: #01579B; /* Darker Blue text */\n  }\n  .container {\n    max-width: 600px;\n    margin: 20px auto;\n    background: linear-gradient(to bottom, #FFFFFF, #B3E5FC);\n    border-radius: 20px;\n    overflow: hidden;\n    box-shadow: 0 5px 15px rgba(0, 120, 186, 0.2);\n    border: 1px solid #81D4FA;\n  }\n  .header {\n    background: linear-gradient(to right, #FFEB3B, #FFC107); /* Yellow gradient */\n    padding: 25px;\n    text-align: center;\n    color: #424242;\n    position: relative;\n  }\n  .header h1 {\n    margin: 0;\n    font-size: 30px;\n    font-weight: 700;\n  }\n  .sun-icon {\n    position: absolute;\n    top: 10px;\n    left: 20px;\n    font-size: 40px;\n    color: #FFF176;\n    text-shadow: 0 0 10px white;\n  }\n  .city-info {\n    padding: 20px;\n    text-align: center;\n    background-color: rgba(255, 255, 255, 0.5);\n    border-bottom: 1px solid #B3E5FC;\n  }\n  .city-info h2 {\n    margin: 0 0 5px 0;\n    color: #0277BD;\n    font-size: 26px;\n  }\n  .city-info p {\n    margin: 0;\n    color: #0288D1;\n    font-size: 16px;\n  }\n  .weather-main {\n    text-align: center;\n    padding: 30px 20px;\n    background-color: #FFFFFF;\n  }\n  .weather-main .description {\n    font-size: 24px;\n    margin-bottom: 15px;\n    color: #01579B;\n    font-weight: bold;\n  }\n  .weather-main .temp {\n    font-size: 60px;\n    font-weight: 700;\n    color: #FF8F00; /* Amber */\n    margin-bottom: 20px;\n  }\n  .weather-details {\n    padding: 0 30px 30px 30px;\n    background-color: #FFFFFF;\n  }\n  .weather-details table {\n    width: 100%;\n    border-collapse: collapse;\n  }\n  .weather-details td {\n    padding: 12px 15px;\n    border-bottom: 1px solid #E1F5FE;\n  }\n  .weather-details .label {\n    color: #0277BD;\n    font-weight: bold;\n    width: 40%;\n  }\n  .weather-details .value {\n    color: #01579B;\n    text-align: left;\n  }\n  .footer {\n    background: linear-gradient(to right, #FFEB3B, #FFC107);\n    padding: 15px;\n    text-align: center;\n    color: #424242;\n    font-size: 12px;\n  }\n  .footer p {\n      margin: 0;\n  }\n</style>\n</head>\n<body>\n  <div class=\"container\">\n    <!-- Header -->\n    <div class=\"header\">\n      <span class=\"sun-icon\">☀️</span>\n      <h1>طقس مشمس!</h1>\n    </div>\n    \n    <!-- City Info -->\n    <div class=\"city-info\">\n      <h2>{{ $node[\"Get Weather Amman1\"].json.name ?? 'Amman' }}</h2>\n      <p>{{ new Date().toLocaleDateString('ar-JO', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>\n    </div>\n    \n    <!-- Weather Main -->\n    <div class=\"weather-main\">\n      <div class=\"description\">\n        {{ $node[\"Get Weather Amman1\"].json.weather[0].description ?? 'غير متوفر' }}\n      </div>\n      <div class=\"temp\">\n        {{ $node[\"Get Weather Amman1\"].json.main.temp ?? 'غير متوفر' }}°C\n      </div>\n    </div>\n    \n    <!-- Weather Details -->\n    <div class=\"weather-details\">\n      <table>\n        <tr>\n          <td class=\"label\">الإحساس الفعلي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.feels_like ?? 'غير متوفر' }}°C</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الرطوبة:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.humidity ?? 'غير متوفر' }}%</td>\n        </tr>\n        <tr>\n          <td class=\"label\">سرعة الرياح:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.wind.speed ?? 'غير متوفر' }} م/ث</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الضغط الجوي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.pressure ?? 'غير متوفر' }} هكتوباسكال</td>\n        </tr>\n      </table>\n    </div>\n    \n    <!-- Footer -->\n    <div class=\"footer\">\n      <p>المصدر: OpenWeatherMap API</p>\n    </div>\n  </div>\n</body>\n</html>"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "736017ce-8a26-4d85-905a-a9acd03d8ea3",
+      "name": "Set Clear Template",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -420,
+        1080
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-clouds-html",
+              "name": "=emailHtml",
+              "type": "string",
+              "value": "=<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"ar\">\n<head>\n<meta charset=\"UTF-8\">\n<style>\n  @import url(\"https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap\");\n  body {\n    margin: 0;\n    padding: 0;\n    font-family: 'Tajawal', sans-serif;\n    direction: rtl;\n    text-align: right;\n    background-color: #CFD8DC; /* Blue Grey background */\n    color: #37474F; /* Darker Blue Grey text */\n  }\n  .container {\n    max-width: 600px;\n    margin: 20px auto;\n    background: linear-gradient(to bottom, #ECEFF1, #B0BEC5);\n    border-radius: 20px;\n    overflow: hidden;\n    box-shadow: 0 5px 15px rgba(84, 110, 122, 0.3);\n    border: 1px solid #90A4AE;\n  }\n  .header {\n    background: linear-gradient(to right, #B0BEC5, #78909C); /* Grey gradient */\n    padding: 25px;\n    text-align: center;\n    color: #ffffff;\n    position: relative;\n  }\n  .header h1 {\n    margin: 0;\n    font-size: 30px;\n    font-weight: 700;\n    text-shadow: 1px 1px 1px #546E7A;\n  }\n  .cloud-icon {\n    position: absolute;\n    top: 10px;\n    left: 20px;\n    font-size: 40px;\n    color: #ECEFF1;\n    opacity: 0.8;\n  }\n  .city-info {\n    padding: 20px;\n    text-align: center;\n    background-color: rgba(255, 255, 255, 0.3);\n    border-bottom: 1px solid #B0BEC5;\n  }\n  .city-info h2 {\n    margin: 0 0 5px 0;\n    color: #455A64;\n    font-size: 26px;\n  }\n  .city-info p {\n    margin: 0;\n    color: #546E7A;\n    font-size: 16px;\n  }\n  .weather-main {\n    text-align: center;\n    padding: 30px 20px;\n    background-color: #ECEFF1;\n  }\n  .weather-main .description {\n    font-size: 24px;\n    margin-bottom: 15px;\n    color: #37474F;\n    font-weight: bold;\n  }\n  .weather-main .temp {\n    font-size: 60px;\n    font-weight: 700;\n    color: #607D8B; /* Blue Grey */\n    margin-bottom: 20px;\n  }\n  .weather-details {\n    padding: 0 30px 30px 30px;\n    background-color: #ECEFF1;\n  }\n  .weather-details table {\n    width: 100%;\n    border-collapse: collapse;\n  }\n  .weather-details td {\n    padding: 12px 15px;\n    border-bottom: 1px solid #CFD8DC;\n  }\n  .weather-details .label {\n    color: #455A64;\n    font-weight: bold;\n    width: 40%;\n  }\n  .weather-details .value {\n    color: #37474F;\n    text-align: left;\n  }\n  .footer {\n    background: linear-gradient(to right, #B0BEC5, #78909C);\n    padding: 15px;\n    text-align: center;\n    color: #ffffff;\n    font-size: 12px;\n  }\n  .footer p {\n      margin: 0;\n  }\n</style>\n</head>\n<body>\n  <div class=\"container\">\n    <!-- Header -->\n    <div class=\"header\">\n      <span class=\"cloud-icon\">☁️</span>\n      <h1>أجواء غائمة</h1>\n    </div>\n    \n    <!-- City Info -->\n    <div class=\"city-info\">\n      <h2>{{ $node[\"Get Weather Amman1\"].json.name ?? 'Amman' }}</h2>\n      <p>{{ new Date().toLocaleDateString('ar-JO', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>\n    </div>\n    \n    <!-- Weather Main -->\n    <div class=\"weather-main\">\n      <div class=\"description\">\n        {{ $node[\"Get Weather Amman1\"].json.weather[0].description ?? 'غير متوفر' }}\n      </div>\n      <div class=\"temp\">\n        {{ $node[\"Get Weather Amman1\"].json.main.temp ?? 'غير متوفر' }}°C\n      </div>\n    </div>\n    \n    <!-- Weather Details -->\n    <div class=\"weather-details\">\n      <table>\n        <tr>\n          <td class=\"label\">الإحساس الفعلي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.feels_like ?? 'غير متوفر' }}°C</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الرطوبة:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.humidity ?? 'غير متوفر' }}%</td>\n        </tr>\n        <tr>\n          <td class=\"label\">سرعة الرياح:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.wind.speed ?? 'غير متوفر' }} م/ث</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الضغط الجوي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.pressure ?? 'غير متوفر' }} هكتوباسكال</td>\n        </tr>\n      </table>\n    </div>\n    \n    <!-- Footer -->\n    <div class=\"footer\">\n      <p>المصدر: OpenWeatherMap API</p>\n    </div>\n  </div>\n</body>\n</html>"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fff3ead1-f5e4-4cb6-bfc8-6c17a13a9375",
+      "name": "Set Clouds Template",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -420,
+        1240
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-rain-html",
+              "name": "=emailHtml",
+              "type": "string",
+              "value": "=<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"ar\">\n<head>\n<meta charset=\"UTF-8\">\n<style>\n  @import url(\"https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap\");\n  body {\n    margin: 0;\n    padding: 0;\n    font-family: 'Tajawal', sans-serif;\n    direction: rtl;\n    text-align: right;\n    background-color: #607D8B; /* Darker Blue Grey background */\n    color: #ECEFF1; /* Light text */\n  }\n  .container {\n    max-width: 600px;\n    margin: 20px auto;\n    background: linear-gradient(to bottom, #90A4AE, #546E7A);\n    border-radius: 20px;\n    overflow: hidden;\n    box-shadow: 0 5px 15px rgba(38, 50, 56, 0.4);\n    border: 1px solid #B0BEC5;\n    position: relative;\n  }\n  .rain-overlay {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAd0lEQVQ4T2NkQAOMpKQkXExMzMbGxq5fvy5vmTNnzt9//+Xk5HR3d+cZFhZWYmJifHx8XFxcvHjxYnFx8dixY8XFxaWkpAoLC1tYWLBarQMDA6uqqmpqampgYGBoaGhgYGBwcHCysrKampqbm5uZmZmamZkZGZkZAAAA//8DAAU0A/9W+QZRAAAAAElFTkSuQmCC'); /* Simple raindrop pattern */\n    opacity: 0.1;\n    pointer-events: none;\n  }\n  .header {\n    background: linear-gradient(to right, #42A5F5, #1E88E5); /* Blue gradient */\n    padding: 25px;\n    text-align: center;\n    color: #ffffff;\n    position: relative;\n    z-index: 1;\n  }\n  .header h1 {\n    margin: 0;\n    font-size: 30px;\n    font-weight: 700;\n    text-shadow: 1px 1px 1px #1565C0;\n  }\n  .rain-icon {\n    position: absolute;\n    top: 10px;\n    left: 20px;\n    font-size: 40px;\n    color: #BBDEFB;\n  }\n  .city-info {\n    padding: 20px;\n    text-align: center;\n    background-color: rgba(255, 255, 255, 0.1);\n    border-bottom: 1px solid #78909C;\n    position: relative;\n    z-index: 1;\n  }\n  .city-info h2 {\n    margin: 0 0 5px 0;\n    color: #E3F2FD;\n    font-size: 26px;\n  }\n  .city-info p {\n    margin: 0;\n    color: #BBDEFB;\n    font-size: 16px;\n  }\n  .weather-main {\n    text-align: center;\n    padding: 30px 20px;\n    background-color: rgba(0, 0, 0, 0.1);\n    position: relative;\n    z-index: 1;\n  }\n  .weather-main .description {\n    font-size: 24px;\n    margin-bottom: 15px;\n    color: #ffffff;\n    font-weight: bold;\n  }\n  .weather-main .temp {\n    font-size: 60px;\n    font-weight: 700;\n    color: #90CAF9; /* Light Blue */\n    margin-bottom: 20px;\n  }\n  .weather-details {\n    padding: 0 30px 30px 30px;\n    background-color: rgba(0, 0, 0, 0.1);\n    position: relative;\n    z-index: 1;\n  }\n  .weather-details table {\n    width: 100%;\n    border-collapse: collapse;\n  }\n  .weather-details td {\n    padding: 12px 15px;\n    border-bottom: 1px solid #78909C;\n  }\n  .weather-details .label {\n    color: #BBDEFB;\n    font-weight: bold;\n    width: 40%;\n  }\n  .weather-details .value {\n    color: #E3F2FD;\n    text-align: left;\n  }\n  .footer {\n    background: linear-gradient(to right, #42A5F5, #1E88E5);\n    padding: 15px;\n    text-align: center;\n    color: #ffffff;\n    font-size: 12px;\n    position: relative;\n    z-index: 1;\n  }\n  .footer p {\n      margin: 0;\n  }\n</style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"rain-overlay\"></div>\n    <!-- Header -->\n    <div class=\"header\">\n      <span class=\"rain-icon\">🌧️</span>\n      <h1>أمطار متوقعة</h1>\n    </div>\n    \n    <!-- City Info -->\n    <div class=\"city-info\">\n      <h2>{{ $node[\"Get Weather Amman1\"].json.name ?? 'Amman' }}</h2>\n      <p>{{ new Date().toLocaleDateString('ar-JO', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>\n    </div>\n    \n    <!-- Weather Main -->\n    <div class=\"weather-main\">\n      <div class=\"description\">\n        {{ $node[\"Get Weather Amman1\"].json.weather[0].description ?? 'غير متوفر' }}\n      </div>\n      <div class=\"temp\">\n        {{ $node[\"Get Weather Amman1\"].json.main.temp ?? 'غير متوفر' }}°C\n      </div>\n    </div>\n    \n    <!-- Weather Details -->\n    <div class=\"weather-details\">\n      <table>\n        <tr>\n          <td class=\"label\">الإحساس الفعلي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.feels_like ?? 'غير متوفر' }}°C</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الرطوبة:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.humidity ?? 'غير متوفر' }}%</td>\n        </tr>\n        <tr>\n          <td class=\"label\">سرعة الرياح:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.wind.speed ?? 'غير متوفر' }} م/ث</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الضغط الجوي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.pressure ?? 'غير متوفر' }} هكتوباسكال</td>\n        </tr>\n      </table>\n    </div>\n    \n    <!-- Footer -->\n    <div class=\"footer\">\n      <p>المصدر: OpenWeatherMap API</p>\n    </div>\n  </div>\n</body>\n</html>"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "172c173f-78e7-4535-bc69-7521a9e8c8a1",
+      "name": "Set Rain Template",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -420,
+        1400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-thunderstorm-html",
+              "name": "=emailHtml",
+              "type": "string",
+              "value": "=<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"ar\">\n<head>\n<meta charset=\"UTF-8\">\n<style>\n  @import url(\"https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap\");\n  body {\n    margin: 0;\n    padding: 0;\n    font-family: 'Tajawal', sans-serif;\n    direction: rtl;\n    text-align: right;\n    background-color: #212121; /* Very Dark Grey background */\n    color: #F5F5F5; /* Light Grey text */\n  }\n  .container {\n    max-width: 600px;\n    margin: 20px auto;\n    background: linear-gradient(to bottom, #424242, #212121);\n    border-radius: 20px;\n    overflow: hidden;\n    box-shadow: 0 5px 20px rgba(255, 235, 59, 0.3); /* Yellow shadow for lightning */\n    border: 1px solid #616161;\n    position: relative;\n  }\n  .header {\n    background: linear-gradient(to right, #616161, #424242); /* Dark Grey gradient */\n    padding: 25px;\n    text-align: center;\n    color: #FFEB3B; /* Yellow */\n    position: relative;\n    border-bottom: 2px solid #FFEB3B;\n  }\n  .header h1 {\n    margin: 0;\n    font-size: 30px;\n    font-weight: 700;\n    text-shadow: 1px 1px 1px #000000;\n  }\n  .lightning-icon {\n    position: absolute;\n    top: 10px;\n    left: 20px;\n    font-size: 40px;\n    color: #FFF59D;\n    animation: flash 1.5s infinite;\n  }\n  @keyframes flash {\n    0%, 100% { opacity: 1; }\n    50% { opacity: 0.3; }\n  }\n  .city-info {\n    padding: 20px;\n    text-align: center;\n    background-color: rgba(0, 0, 0, 0.2);\n    border-bottom: 1px solid #616161;\n  }\n  .city-info h2 {\n    margin: 0 0 5px 0;\n    color: #F5F5F5;\n    font-size: 26px;\n  }\n  .city-info p {\n    margin: 0;\n    color: #BDBDBD;\n    font-size: 16px;\n  }\n  .weather-main {\n    text-align: center;\n    padding: 30px 20px;\n    background-color: #303030;\n  }\n  .weather-main .description {\n    font-size: 24px;\n    margin-bottom: 15px;\n    color: #ffffff;\n    font-weight: bold;\n  }\n  .weather-main .temp {\n    font-size: 60px;\n    font-weight: 700;\n    color: #E0E0E0;\n    margin-bottom: 20px;\n  }\n  .weather-details {\n    padding: 0 30px 30px 30px;\n    background-color: #303030;\n  }\n  .weather-details table {\n    width: 100%;\n    border-collapse: collapse;\n  }\n  .weather-details td {\n    padding: 12px 15px;\n    border-bottom: 1px solid #616161;\n  }\n  .weather-details .label {\n    color: #BDBDBD;\n    font-weight: bold;\n    width: 40%;\n  }\n  .weather-details .value {\n    color: #F5F5F5;\n    text-align: left;\n  }\n  .footer {\n    background: linear-gradient(to right, #616161, #424242);\n    padding: 15px;\n    text-align: center;\n    color: #FFEB3B;\n    font-size: 12px;\n    border-top: 1px solid #FFEB3B;\n  }\n  .footer p {\n      margin: 0;\n  }\n</style>\n</head>\n<body>\n  <div class=\"container\">\n    <!-- Header -->\n    <div class=\"header\">\n      <span class=\"lightning-icon\">⚡</span>\n      <h1>تحذير: عاصفة رعدية!</h1>\n    </div>\n    \n    <!-- City Info -->\n    <div class=\"city-info\">\n      <h2>{{ $node[\"Get Weather Amman1\"].json.name ?? 'Amman' }}</h2>\n      <p>{{ new Date().toLocaleDateString('ar-JO', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>\n    </div>\n    \n    <!-- Weather Main -->\n    <div class=\"weather-main\">\n      <div class=\"description\">\n        {{ $node[\"Get Weather Amman1\"].json.weather[0].description ?? 'غير متوفر' }}\n      </div>\n      <div class=\"temp\">\n        {{ $node[\"Get Weather Amman1\"].json.main.temp ?? 'غير متوفر' }}°C\n      </div>\n    </div>\n    \n    <!-- Weather Details -->\n    <div class=\"weather-details\">\n      <table>\n        <tr>\n          <td class=\"label\">الإحساس الفعلي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.feels_like ?? 'غير متوفر' }}°C</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الرطوبة:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.humidity ?? 'غير متوفر' }}%</td>\n        </tr>\n        <tr>\n          <td class=\"label\">سرعة الرياح:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.wind.speed ?? 'غير متوفر' }} م/ث</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الضغط الجوي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.pressure ?? 'غير متوفر' }} هكتوباسكال</td>\n        </tr>\n      </table>\n    </div>\n    \n    <!-- Footer -->\n    <div class=\"footer\">\n      <p>المصدر: OpenWeatherMap API</p>\n    </div>\n  </div>\n</body>\n</html>"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "70ad8f57-87bd-41ef-aca4-c193ad77feff",
+      "name": "Set Thunderstorm Template",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -420,
+        1560
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-snow-html",
+              "name": "=emailHtml",
+              "type": "string",
+              "value": "=<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"ar\">\n<head>\n<meta charset=\"UTF-8\">\n<style>\n  @import url(\"https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap\");\n  body {\n    margin: 0;\n    padding: 0;\n    font-family: 'Tajawal', sans-serif;\n    direction: rtl;\n    text-align: right;\n    background-color: #E3F2FD; /* Very Light Blue background */\n    color: #1A237E; /* Indigo text */\n  }\n  .container {\n    max-width: 600px;\n    margin: 20px auto;\n    background: linear-gradient(to bottom, #FFFFFF, #E3F2FD);\n    border-radius: 20px;\n    overflow: hidden;\n    box-shadow: 0 5px 15px rgba(179, 229, 252, 0.5);\n    border: 1px solid #BBDEFB;\n    position: relative;\n  }\n  .snow-overlay {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\".9em\" font-size=\"90\">❄️</text></svg>');\n    background-size: 50px 50px;\n    opacity: 0.05;\n    pointer-events: none;\n    animation: snowfall 10s linear infinite;\n  }\n  @keyframes snowfall {\n    0% { background-position: 0px 0px; }\n    100% { background-position: 50px 1000px; }\n  }\n  .header {\n    background: linear-gradient(to right, #B3E5FC, #81D4FA); /* Light Blue gradient */\n    padding: 25px;\n    text-align: center;\n    color: #0D47A1; /* Dark Blue */\n    position: relative;\n    z-index: 1;\n    border-bottom: 2px solid #FFFFFF;\n  }\n  .header h1 {\n    margin: 0;\n    font-size: 30px;\n    font-weight: 700;\n    text-shadow: 1px 1px 1px #E3F2FD;\n  }\n  .snowflake-icon {\n    position: absolute;\n    top: 10px;\n    left: 20px;\n    font-size: 40px;\n    color: #FFFFFF;\n  }\n  .city-info {\n    padding: 20px;\n    text-align: center;\n    background-color: rgba(255, 255, 255, 0.6);\n    border-bottom: 1px solid #BBDEFB;\n    position: relative;\n    z-index: 1;\n  }\n  .city-info h2 {\n    margin: 0 0 5px 0;\n    color: #1565C0;\n    font-size: 26px;\n  }\n  .city-info p {\n    margin: 0;\n    color: #1E88E5;\n    font-size: 16px;\n  }\n  .weather-main {\n    text-align: center;\n    padding: 30px 20px;\n    background-color: #FFFFFF;\n    position: relative;\n    z-index: 1;\n  }\n  .weather-main .description {\n    font-size: 24px;\n    margin-bottom: 15px;\n    color: #0D47A1;\n    font-weight: bold;\n  }\n  .weather-main .temp {\n    font-size: 60px;\n    font-weight: 700;\n    color: #42A5F5; /* Blue */\n    margin-bottom: 20px;\n  }\n  .weather-details {\n    padding: 0 30px 30px 30px;\n    background-color: #FFFFFF;\n    position: relative;\n    z-index: 1;\n  }\n  .weather-details table {\n    width: 100%;\n    border-collapse: collapse;\n  }\n  .weather-details td {\n    padding: 12px 15px;\n    border-bottom: 1px solid #E3F2FD;\n  }\n  .weather-details .label {\n    color: #1565C0;\n    font-weight: bold;\n    width: 40%;\n  }\n  .weather-details .value {\n    color: #1A237E;\n    text-align: left;\n  }\n  .footer {\n    background: linear-gradient(to right, #B3E5FC, #81D4FA);\n    padding: 15px;\n    text-align: center;\n    color: #0D47A1;\n    font-size: 12px;\n    position: relative;\n    z-index: 1;\n  }\n  .footer p {\n      margin: 0;\n  }\n</style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"snow-overlay\"></div>\n    <!-- Header -->\n    <div class=\"header\">\n      <span class=\"snowflake-icon\">❄️</span>\n      <h1>تساقط الثلوج!</h1>\n    </div>\n    \n    <!-- City Info -->\n    <div class=\"city-info\">\n      <h2>{{ $node[\"Get Weather Amman1\"].json.name ?? 'Amman' }}</h2>\n      <p>{{ new Date().toLocaleDateString('ar-JO', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>\n    </div>\n    \n    <!-- Weather Main -->\n    <div class=\"weather-main\">\n      <div class=\"description\">\n        {{ $node[\"Get Weather Amman1\"].json.weather[0].description ?? 'غير متوفر' }}\n      </div>\n      <div class=\"temp\">\n        {{ $node[\"Get Weather Amman1\"].json.main.temp ?? 'غير متوفر' }}°C\n      </div>\n    </div>\n    \n    <!-- Weather Details -->\n    <div class=\"weather-details\">\n      <table>\n        <tr>\n          <td class=\"label\">الإحساس الفعلي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.feels_like ?? 'غير متوفر' }}°C</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الرطوبة:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.humidity ?? 'غير متوفر' }}%</td>\n        </tr>\n        <tr>\n          <td class=\"label\">سرعة الرياح:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.wind.speed ?? 'غير متوفر' }} م/ث</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الضغط الجوي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.pressure ?? 'غير متوفر' }} هكتوباسكال</td>\n        </tr>\n      </table>\n    </div>\n    \n    <!-- Footer -->\n    <div class=\"footer\">\n      <p>المصدر: OpenWeatherMap API</p>\n    </div>\n  </div>\n</body>\n</html>"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c048f331-15f2-45da-8d50-a7e6f01430ed",
+      "name": "Set Snow Template",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -420,
+        1740
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-mist-html",
+              "name": "=emailHtml",
+              "type": "string",
+              "value": "=<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"ar\">\n<head>\n<meta charset=\"UTF-8\">\n<style>\n  @import url(\"https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap\");\n  body {\n    margin: 0;\n    padding: 0;\n    font-family: 'Tajawal', sans-serif;\n    direction: rtl;\n    text-align: right;\n    background-color: #B0BEC5; /* Muted Blue Grey background */\n    color: #455A64; /* Darker Muted Blue Grey text */\n  }\n  .container {\n    max-width: 600px;\n    margin: 20px auto;\n    background: linear-gradient(to bottom, #ECEFF1, #CFD8DC);\n    border-radius: 20px;\n    overflow: hidden;\n    box-shadow: 0 5px 15px rgba(120, 144, 156, 0.3);\n    border: 1px solid #B0BEC5;\n    position: relative;\n  }\n  .fog-overlay {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background: linear-gradient(to bottom, rgba(236, 239, 241, 0.1), rgba(207, 216, 220, 0.5));\n    opacity: 0.7;\n    pointer-events: none;\n    z-index: 0;\n  }\n  .header {\n    background: linear-gradient(to right, #CFD8DC, #90A4AE); /* Muted Grey gradient */\n    padding: 25px;\n    text-align: center;\n    color: #546E7A;\n    position: relative;\n    z-index: 1;\n    border-bottom: 1px solid #B0BEC5;\n  }\n  .header h1 {\n    margin: 0;\n    font-size: 30px;\n    font-weight: 700;\n    text-shadow: 1px 1px 1px #ECEFF1;\n  }\n  .mist-icon {\n    position: absolute;\n    top: 10px;\n    left: 20px;\n    font-size: 40px;\n    color: #ECEFF1;\n    opacity: 0.6;\n  }\n  .city-info {\n    padding: 20px;\n    text-align: center;\n    background-color: rgba(255, 255, 255, 0.2);\n    border-bottom: 1px solid #B0BEC5;\n    position: relative;\n    z-index: 1;\n  }\n  .city-info h2 {\n    margin: 0 0 5px 0;\n    color: #546E7A;\n    font-size: 26px;\n  }\n  .city-info p {\n    margin: 0;\n    color: #607D8B;\n    font-size: 16px;\n  }\n  .weather-main {\n    text-align: center;\n    padding: 30px 20px;\n    background-color: rgba(255, 255, 255, 0.4);\n    position: relative;\n    z-index: 1;\n  }\n  .weather-main .description {\n    font-size: 24px;\n    margin-bottom: 15px;\n    color: #455A64;\n    font-weight: bold;\n  }\n  .weather-main .temp {\n    font-size: 60px;\n    font-weight: 700;\n    color: #78909C;\n    margin-bottom: 20px;\n  }\n  .weather-details {\n    padding: 0 30px 30px 30px;\n    background-color: rgba(255, 255, 255, 0.4);\n    position: relative;\n    z-index: 1;\n  }\n  .weather-details table {\n    width: 100%;\n    border-collapse: collapse;\n  }\n  .weather-details td {\n    padding: 12px 15px;\n    border-bottom: 1px solid #CFD8DC;\n  }\n  .weather-details .label {\n    color: #546E7A;\n    font-weight: bold;\n    width: 40%;\n  }\n  .weather-details .value {\n    color: #455A64;\n    text-align: left;\n  }\n  .footer {\n    background: linear-gradient(to right, #CFD8DC, #90A4AE);\n    padding: 15px;\n    text-align: center;\n    color: #546E7A;\n    font-size: 12px;\n    position: relative;\n    z-index: 1;\n  }\n  .footer p {\n      margin: 0;\n  }\n</style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"fog-overlay\"></div>\n    <!-- Header -->\n    <div class=\"header\">\n      <span class=\"mist-icon\">🌫️</span>\n      <h1>ضباب أو أجواء غير صافية</h1>\n    </div>\n    \n    <!-- City Info -->\n    <div class=\"city-info\">\n      <h2>{{ $node[\"Get Weather Amman1\"].json.name ?? 'Amman' }}</h2>\n      <p>{{ new Date().toLocaleDateString('ar-JO', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>\n    </div>\n    \n    <!-- Weather Main -->\n    <div class=\"weather-main\">\n      <div class=\"description\">\n        {{ $node[\"Get Weather Amman1\"].json.weather[0].description ?? 'غير متوفر' }}\n      </div>\n      <div class=\"temp\">\n        {{ $node[\"Get Weather Amman1\"].json.main.temp ?? 'غير متوفر' }}°C\n      </div>\n    </div>\n    \n    <!-- Weather Details -->\n    <div class=\"weather-details\">\n      <table>\n        <tr>\n          <td class=\"label\">الإحساس الفعلي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.feels_like ?? 'غير متوفر' }}°C</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الرطوبة:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.humidity ?? 'غير متوفر' }}%</td>\n        </tr>\n        <tr>\n          <td class=\"label\">سرعة الرياح:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.wind.speed ?? 'غير متوفر' }} م/ث</td>\n        </tr>\n        <tr>\n          <td class=\"label\">الضغط الجوي:</td>\n          <td class=\"value\">{{ $node[\"Get Weather Amman1\"].json.main.pressure ?? 'غير متوفر' }} هكتوباسكال</td>\n        </tr>\n      </table>\n    </div>\n    \n    <!-- Footer -->\n    <div class=\"footer\">\n      <p>المصدر: OpenWeatherMap API</p>\n    </div>\n  </div>\n</body>\n</html>"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cb7d89f8-ef82-4089-acfa-8d3138b8a291",
+      "name": "Set Mist/Atmosphere Template",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -420,
+        1900
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "raggadr6472gmail.com",
+        "toEmail": "ranaraggad00@gmail.com, ADD_MORE_EMAILS_HERE",
+        "subject": "=تقرير الطقس اليومي لمدينة {{ $node[\"Get Weather Amman1\"].json.name ?? 'Amman' }} - {{ $node[\"Get Weather Amman1\"].json.weather[0].main }}",
+        "html": "={{ $json.emailHtml }}",
+        "options": {}
+      },
+      "id": "a0b34e0f-e75d-41c1-b2fd-a134e6ab78df",
+      "name": "Send Email1",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        1480
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "h2sw30Qmj9CIGZVr",
+          "name": "SMTP account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 0,
+              "triggerAtHour": 9
+            },
+            {
+              "daysInterval": 0,
+              "triggerAtHour": 16
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1280,
+        1460
+      ],
+      "id": "f8131add-8612-4223-9605-ae7c2de2cf95",
+      "name": "Schedule (9am & 4pm)"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get Weather Amman1": {
+      "main": [
+        [
+          {
+            "node": "Switch Weather Condition",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Weather Condition": {
+      "main": [
+        [
+          {
+            "node": "Set Clear Template",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Clouds Template",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Rain Template",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Thunderstorm Template",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Set Snow Template",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Set Mist/Atmosphere Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Clear Template": {
+      "main": [
+        [
+          {
+            "node": "Send Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Clouds Template": {
+      "main": [
+        [
+          {
+            "node": "Send Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Rain Template": {
+      "main": [
+        [
+          {
+            "node": "Send Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Thunderstorm Template": {
+      "main": [
+        [
+          {
+            "node": "Send Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Snow Template": {
+      "main": [
+        [
+          {
+            "node": "Send Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Mist/Atmosphere Template": {
+      "main": [
+        [
+          {
+            "node": "Send Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule (9am & 4pm)": {
+      "main": [
+        [
+          {
+            "node": "Get Weather Amman1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9d08f1a8-e278-4066-9257-733f29bb862a",
+  "meta": {
+    "instanceId": "e3dfc1280a79831d4234af7e6cc08f9877ebfb9b654891eea42f918f0063ec33"
+  },
+  "id": "rrc3vuEXvyizCTM8",
+  "tags": []
+}
