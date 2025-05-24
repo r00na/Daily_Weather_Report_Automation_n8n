@@ -4,7 +4,7 @@ This project is a fully automated weather report system using [n8n](https://n8n.
 
 ### 🔄 Workflow Preview  
 
-![Workflow Preview](images/workflowww.png)
+![Workflow Preview](images/workflowwww.png)
 
 ## ⚙️ Detailed Workflow Breakdown
 
