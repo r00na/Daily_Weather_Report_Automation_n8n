@@ -53,20 +53,22 @@ This is the actual result email automatically sent every day at **9 AM** and **6
 To test each weather scenario, the city name was changed manually to simulate different weather types. Below are screenshots of the email output for each condition:
 
 ### 🌫️ Mist / Fog / Haze  
-*City used for test: e.g., London*  
-![Mist Preview](images/test_mist.png)
 
-### ❄️ Snow  
-*City used for test: e.g., Moscow*  
-![Snow Preview](images/test_snow.png)
+#### **haze**  
+*City used for test: Delhi*  
+![Delhi Haze](images/haze.png)  
+
+#### **haze + Thunderstorm**
+*City used for test: Mumbai*  
+![Mumbai Haze + Thunderstorm](images/haze1.png)  
 
 ### ☁️ Cloudy  
-*City used for test: e.g., Berlin*  
-![Cloudy Preview](images/test_cloudy.png)
+*City used for test: Moscow*  
+![Cloudy Preview](images/cloudy.png)
 
 ### 🌧️ Rain  
-*City used for test: e.g., Kuala Lumpur*  
-![Rain Preview](images/test_rain.png)
+*City used for test: Kuala Lumpur*  
+![Rain Preview](images/rain.png)
 
 
 ## 🧩 Technologies Used
