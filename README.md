@@ -2,6 +2,10 @@
 
 This project is a fully automated weather report system using [n8n](https://n8n.io), the **OpenWeatherMap API**, and **SMTP**. It sends beautifully styled **Arabic HTML emails** for **Amman, Jordan** twice daily at **9:00 AM and 6:00 PM**.
 
+### 🔄 Workflow Preview  
+
+![Workflow Preview](images/workfloww.png)
+
 ## ⚙️ Detailed Workflow Breakdown
 
 The n8n workflow is composed of the following nodes:
